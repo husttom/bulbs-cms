@@ -1,12 +1,26 @@
 <div>
-  <button>Clear All Search Parameters</button>
+  <div class="clear-search-queries-container clearfix">
+    <button
+        ng-show="customSearchService.groups.length > 0"
+        class="btn-minimalized pull-right btn-clear-queries"
+        ng-click="customSearchService.clearAllQueries()">
+      <i class="glyphicon glyphicon-remove"></i>
+      Clear All Search Parameters
+    </button>
+  </div>
 
   <custom-search-query
       ng-repeat="group in customSearchService.groups"
       remove="customSearchService.removeQuery($index)"
-      model="group"></custom-search-query>
+      model="group">
+  </custom-search-query>
 
-  <button ng-click="customSearchService.newQuery()">Add Another Query</button>
+  <button
+      class="btn-minimalized"
+      ng-click="customSearchService.newQuery()">
+    <i class="glyphicon glyphicon-plus"></i>
+    Add Another Query
+  </button>
 </div>
 
 <custom-search-simple-content-search></custom-search-simple-content-search>
