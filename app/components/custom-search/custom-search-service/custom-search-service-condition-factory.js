@@ -30,5 +30,9 @@ angular.module('customSearch.service.condition.factory', [
       return this.values.splice(index, 1).length > 0;
     };
 
+    CustomSearchServiceCondition.prototype.clearAllValues = function () {
+      this.values = [];
+    };
+
     return CustomSearchServiceCondition;
   });

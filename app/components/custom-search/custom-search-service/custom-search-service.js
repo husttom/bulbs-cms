@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('customSearch.service', [
+  'customSearch.settings',
   'customSearch.service.query.factory'
 ])
-  .factory('CustomSearchService', function (_, $q, ContentFactory, CustomSearchServiceQuery) {
+  .factory('CustomSearchService', function (_, ContentFactory, CUSTOM_SEARCH_REQUEST_CAP_MS,
+      CustomSearchServiceQuery) {
 
     /**
      * Create custom search service.
@@ -11,12 +13,16 @@ angular.module('customSearch.service', [
      * @returns service wrapper around given endpoint.
      */
     var CustomSearchService = function () {
+      this.content = {};
+
       this.groups = [];
       this.included_ids = [];
       this.excluded_ids = [];
       this.pinned_ids = [];
 
-      this._content = {};
+      this.page = 1;
+      this.query = '';
+
       this._contentEndpoint = ContentFactory.service('custom-search-content/');
     };
 
@@ -27,12 +33,43 @@ angular.module('customSearch.service', [
         }),
         included_ids: this.included_ids,
         excluded_ids: this.excluded_ids,
-        pinned_ids: this.pinned_ids
+        pinned_ids: this.pinned_ids,
+        page: this.page,
+        query: this.query
       };
     };
 
-    CustomSearchService.prototype.$queryBinding = function () {
-      return this._query;
+    CustomSearchService.prototype._$getContent = _.debounce(function (queryData) {
+      var self = this;
+      return self._contentEndpoint.post(queryData)
+        .then(function (data) {
+          self.content = data;
+        });
+    }, CUSTOM_SEARCH_REQUEST_CAP_MS);
+
+    CustomSearchService.prototype.$filterContentByIncluded = function () {
+      var contentQuery = _.pick(this.asQueryData(), [
+        'groups',
+        'included_ids',
+        'page',
+        'query'
+      ]);
+      return this._$getContent(contentQuery);
+    };
+
+    CustomSearchService.prototype.$filterContentByExcluded = function () {
+      var contentQuery = _.pick(this.asQueryData(), [
+        'groups',
+        'excluded_ids',
+        'page',
+        'query'
+      ]);
+      return this._$getContent(contentQuery);
+    };
+
+    CustomSearchService.prototype.$retrieveContent = function () {
+      var contentQuery = _.cloneDeep(this.asQueryData());
+      return this._$getContent(contentQuery);
     };
 
     CustomSearchService.prototype.newQuery = function () {
@@ -49,74 +86,57 @@ angular.module('customSearch.service', [
       this.groups = [];
     };
 
-    // CustomSearchService.prototype._$getContent = function () {
-    //   return this._contentEndpoint.post(this.asQueryData())
-    //     .then(function (data) {
-    //       this._content = data;
-    //     });
-    // };
+    CustomSearchService.prototype.include = function (id) {
+      // add id, ensure uniqueness
+      this.included_ids.push(id);
+      this.included_ids = _.uniq(this.included_ids);
 
-// TODO : PUT THIS SOMEWHERE ELSE
-    // CustomSearchService.prototype.$filterContentByIncluded = function () {
-    //   var contentQuery = _.pick(this._query, 'included_ids');
-    //   return this._$getContent(contentQuery);
-    // };
-    //
-    // CustomSearchService.prototype.$filterContentByExcluded = function () {
-    //   var contentQuery = _.pick(this._query, 'excluded_ids');
-    //   return this._$getContent(contentQuery);
-    // };
-    //
-    // CustomSearchService.prototype.$updateContent = function (page, searchTerm) {
-    //   var contentQuery =
-    //     _.chain(this._query).cloneDeep()
-    //       .assign({
-    //         page: page,
-    //         searchTerm: searchTerm
-    //       })
-    //       .value();
-    //   return this._$getContent(contentQuery);
-    // };
-    //
-    // CustomSearchService.prototype.include = function (id) {
-    //   // add id, ensure uniqueness
-    //   this._query.included_ids.push(id);
-    //   this._query.included_ids = _.uniq(this._query.included_ids);
-    //
-    //   // remove from exclude list
-    //   this.unexclude(id);
-    // };
-    //
-    // CustomSearchService.prototype.uninclude = function (id) {
-    //   this._query.included_ids = _.without(this._query.included_ids, id);
-    // };
-    //
-    // CustomSearchService.prototype.exclude = function (id) {
-    //   // exclude id, ensure unqiueness
-    //   this._query.excluded_ids.push(id);
-    //   this._query.excluded_ids = _.uniq(this._query.excluded_ids);
-    //
-    //   // remove from include list and pinned list
-    //   this.uninclude(id);
-    //   this.unpin(id);
-    // };
-    //
-    // CustomSearchService.prototype.unexclude = function (id) {
-    //   this._query.excluded_ids = _.without(this._query.excluded_ids, id);
-    // };
-    //
-    // CustomSearchService.prototype.pin = function (id) {
-    //   // pin id, ensure unqiueness
-    //   this._query.pinned_ids.push(id);
-    //   this._query.pinned_ids = _.uniq(this._query.pinned_ids);
-    //
-    //   // remove from exclude list
-    //   this.unexclude(id);
-    // };
-    //
-    // CustomSearchService.prototype.unpin = function (id) {
-    //   this._query.pinned_ids = _.without(this._query.pinned_ids, id);
-    // };
+      // remove from exclude list
+      this.unexclude(id);
+    };
+
+    CustomSearchService.prototype.uninclude = function (id) {
+      this.included_ids = _.without(this.included_ids, id);
+    };
+
+    CustomSearchService.prototype.isIncluded = function (id) {
+      return _.includes(this.included_ids, id);
+    };
+
+    CustomSearchService.prototype.exclude = function (id) {
+      // exclude id, ensure unqiueness
+      this.excluded_ids.push(id);
+      this.excluded_ids = _.uniq(this.excluded_ids);
+
+      // remove from include list and pinned list
+      this.uninclude(id);
+      this.unpin(id);
+    };
+
+    CustomSearchService.prototype.unexclude = function (id) {
+      this.excluded_ids = _.without(this.excluded_ids, id);
+    };
+
+    CustomSearchService.prototype.isExcluded = function (id) {
+      return _.includes(this.excluded_ids, id);
+    };
+
+    CustomSearchService.prototype.pin = function (id) {
+      // pin id, ensure unqiueness
+      this.pinned_ids.push(id);
+      this.pinned_ids = _.uniq(this.pinned_ids);
+
+      // remove from exclude list
+      this.unexclude(id);
+    };
+
+    CustomSearchService.prototype.unpin = function (id) {
+      this.pinned_ids = _.without(this.pinned_ids, id);
+    };
+
+    CustomSearchService.prototype.isPinned = function (id) {
+      return _.includes(this.pinned_ids, id);
+    };
 
     return CustomSearchService;
   });

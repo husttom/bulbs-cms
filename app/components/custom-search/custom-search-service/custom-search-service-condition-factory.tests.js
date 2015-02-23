@@ -44,4 +44,12 @@ describe('Factory: CustomSearchServiceCondition', function () {
     expect(customSearchServiceCondition.values[0]).toEqual(value1);
     expect(customSearchServiceCondition.values[1]).toEqual(value2);
   });
+
+  it('should provide a way to clear all values', function () {
+    customSearchServiceCondition.values.push({}, {});
+
+    customSearchServiceCondition.clearAllValues();
+
+    expect(customSearchServiceCondition.values.length).toBe(0);
+  });
 });

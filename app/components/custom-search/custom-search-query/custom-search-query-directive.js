@@ -15,7 +15,8 @@ angular.module('customSearch.query.directive', [
       restrict: 'E',
       scope: {
         model: '=',
-        remove: '&'
+        remove: '&',
+        onUpdate: '&'
       },
       templateUrl: routes.COMPONENTS_URL + 'custom-search/custom-search-query/custom-search-query.html'
     };

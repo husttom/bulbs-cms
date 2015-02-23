@@ -1,6 +1,70 @@
 custom-search {
 
-  .clear-search-queries-container {
-    margin-bottom: 10px;
+  .section {
+    margin-bottom: 15px;
+  }
+
+  custom-search-content-item {
+    .section;
+  }
+
+  custom-search-simple-content-search {
+    .section;
+  }
+
+  .queries-section {
+    .section;
+
+    .clear-search-queries-container {
+      margin-bottom: 10px;
+    }
+  }
+
+  .content-list {
+
+    .content-list-filters {
+      .section;
+
+      .search-input {
+        background-color: #fff;
+        display: table;
+        padding: 8px 10px 5px;
+        width: 60%;
+
+        .label-container {
+          display: table-cell;
+          width: 25px;
+        }
+
+        .input-container {
+          display: table-cell;
+
+          input {
+            border: none;
+            outline: 0;
+            width: 100%;
+          }
+        }
+
+        .btn-container {
+          display: table-cell;
+          padding-left: 10px;
+          width: 1px;
+        }
+      }
+
+      .btn-filter {
+
+        &.btn-filter-green {
+          background-color: #7f7;
+          border: 1px solid #0f0;
+        }
+
+        &.btn-filter-red {
+          background-color: #faa;
+          border: 1px solid #f00;
+        }
+      }
+    }
   }
 }

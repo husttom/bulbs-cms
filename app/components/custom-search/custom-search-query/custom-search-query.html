@@ -10,9 +10,9 @@
   <div class="panel-body">
     <custom-search-query-condition
         ng-repeat="condition in model.conditions"
-        remove="model.removeCondition($index); model.$updateResultCount()"
+        remove="model.removeCondition($index); model.$updateResultCount(); onUpdate()"
         model="condition"
-        on-update="model.$updateResultCount()">
+        on-update="model.$updateResultCount(); onUpdate()">
     </custom-search-query-condition>
 
     <div
@@ -25,14 +25,14 @@
               id="timePeriod-{{ uuid }}"
               class="form-control"
               ng-model="model.time_period"
-              ng-change="model.$updateResultCount()"
+              ng-change="model.$updateResultCount(); onUpdate()"
               ng-options="timePeriod.value as timePeriod.name for timePeriod in timePeriods">
           </select>
         </div>
       </div>
       <button
           class="query-time-period-remove btn btn-xs btn-danger"
-          ng-click="model.removeTimePeriod(); model.$updateResultCount()">
+          ng-click="model.removeTimePeriod(); model.$updateResultCount(); onUpdate()">
         <i class="glyphicon glyphicon-remove"></i>
       </button>
     </div>
@@ -46,7 +46,7 @@
     <button
         class="btn-minimalized btn-add-time-period"
         ng-if="!model.time_period"
-        ng-click="model.addTimePeriod(); model.$updateResultCount()">
+        ng-click="model.addTimePeriod(); model.$updateResultCount(); onUpdate()">
       <i class="glyphicon glyphicon-plus"></i>
       Add Time Period
     </button>

@@ -39,4 +39,5 @@ angular.module('customSearch.settings', [])
   }, {
     name: 'Past Week',
     value: '1 week'
-  }]);
+  }])
+  .value('CUSTOM_SEARCH_REQUEST_CAP_MS', 150);

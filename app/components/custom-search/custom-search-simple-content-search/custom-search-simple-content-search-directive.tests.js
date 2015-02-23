@@ -8,6 +8,8 @@ describe('Directive: customSearchSimpleContentSearch', function () {
   beforeEach(function () {
     module('bulbsCmsApp');
     module('bulbsCmsApp.mockApi');
+    module('jsTemplates');
+    module('customSearch.simpleContentSearch.directive');
 
     inject(function(_$rootScope_, $compile) {
        $scope = _$rootScope_.$new();

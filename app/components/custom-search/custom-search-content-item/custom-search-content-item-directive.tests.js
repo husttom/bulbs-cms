@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: customSearchContentListItem', function () {
+describe('Directive: customSearchContentItem', function () {
   var
     $scope,
     $directiveScope;
@@ -13,23 +13,23 @@ describe('Directive: customSearchContentListItem', function () {
     inject(function(_$rootScope_, $compile) {
        $scope = _$rootScope_.$new();
 
-      var element = $compile('<custom-search-content-list-item></custom-search-content-list-item>')($scope.$new());
+      var element = $compile('<custom-search-content-item></custom-search-content-item>')($scope.$new());
       _$rootScope_.$digest();
       $directiveScope = element.isolateScope();
     });
   });
 
-  it('should provide a function to access parent scope\'s pin functionality to pin itself', function () {
+  it('should change display when service says it\'s included', function () {
 // TODO : fill this in
     throw 'Not implemented yet.';
   });
 
-  it('should provide a function to access parent scope\'s remove functionality to remove itself', function () {
+  it('should change display when service says it\'s excluded', function () {
 // TODO : fill this in
     throw 'Not implemented yet.';
   });
 
-  it('should provide a function to access a parent scope\'s functionality to readd itself if removed', function () {
+  it('should change display when service says it\'s pinned', function () {
 // TODO : fill this in
     throw 'Not implemented yet.';
   });
