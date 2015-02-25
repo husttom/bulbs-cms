@@ -10,7 +10,7 @@ angular.module('customSearch.directive', [
   .directive('customSearch', function (routes) {
     return {
       controller: function ($scope, CustomSearchService) {
-        $scope.customSearchService = new CustomSearchService();
+        $scope.customSearchService = new CustomSearchService($scope.searchQueryData);
 
         $scope.customSearchService.$retrieveContent();
 
@@ -38,7 +38,9 @@ angular.module('customSearch.directive', [
         };
       },
       restrict: 'E',
-      scope: {},
+      scope: {
+        searchQueryData: '='
+      },
       templateUrl: routes.COMPONENTS_URL + 'custom-search/custom-search.html'
     };
   });

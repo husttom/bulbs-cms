@@ -17,14 +17,14 @@
 
     <div
         class="query-time-period"
-        ng-if="model.time_period">
+        ng-if="model.time">
       <div class="form-inline">
         <div class="form-group input-group-sm">
           <label for="timePeriod-{{ uuid }}">Time Period is from</label>
           <select
               id="timePeriod-{{ uuid }}"
               class="form-control"
-              ng-model="model.time_period"
+              ng-model="model.time"
               ng-change="model.$updateResultCount(); onUpdate()"
               ng-options="timePeriod.value as timePeriod.name for timePeriod in timePeriods">
           </select>
@@ -45,7 +45,7 @@
     </button>
     <button
         class="btn-minimalized btn-add-time-period"
-        ng-if="!model.time_period"
+        ng-if="!model.time"
         ng-click="model.addTimePeriod(); model.$updateResultCount(); onUpdate()">
       <i class="glyphicon glyphicon-plus"></i>
       Add Time Period

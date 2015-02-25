@@ -12,16 +12,26 @@ angular.module('customSearch.service', [
      *
      * @returns service wrapper around given endpoint.
      */
-    var CustomSearchService = function () {
-      this.content = {};
+    var CustomSearchService = function (params) {
+      var opts = params || {};
+
+      this.included_ids = opts.included_ids || [];
+      this.excluded_ids = opts.excluded_ids || [];
+      this.pinned_ids = opts.pinned_ids || [];
+
+      this.page = opts.page || 1;
+      this.query = opts.query || '';
 
       this.groups = [];
-      this.included_ids = [];
-      this.excluded_ids = [];
-      this.pinned_ids = [];
+      if (opts.groups) {
+        // build out groups if they were provided
+        var self = this;
+        _.forEach(opts.groups, function (group) {
+          self.newQuery(group);
+        });
+      }
 
-      this.page = 1;
-      this.query = '';
+      this.content = {};
 
       this._contentEndpoint = ContentFactory.service('custom-search-content/');
     };
@@ -72,8 +82,8 @@ angular.module('customSearch.service', [
       return this._$getContent(contentQuery);
     };
 
-    CustomSearchService.prototype.newQuery = function () {
-      var newQuery = new CustomSearchServiceQuery();
+    CustomSearchService.prototype.newQuery = function (params) {
+      var newQuery = new CustomSearchServiceQuery(params);
       this.groups.push(newQuery);
       return newQuery;
     };

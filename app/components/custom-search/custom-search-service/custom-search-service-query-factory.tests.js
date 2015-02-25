@@ -29,13 +29,13 @@ describe('Factory: CustomSearchServiceQuery', function () {
     spyOn(condition, 'asQueryData');
 
     customSearchServiceQuery.conditions.push(condition);
-    customSearchServiceQuery.time_period = CUSTOM_SEARCH_TIME_PERIODS[0].value;
+    customSearchServiceQuery.time = CUSTOM_SEARCH_TIME_PERIODS[0].value;
 
     var data = customSearchServiceQuery.asQueryData();
 
     expect(condition.asQueryData).toHaveBeenCalled();
     expect(_.isArray(data.conditions)).toBe(true);
-    expect(data.time_period).toBe(CUSTOM_SEARCH_TIME_PERIODS[0].value);
+    expect(data.time).toBe(CUSTOM_SEARCH_TIME_PERIODS[0].value);
   });
 
   it('should be able to retrieve the content count for a query', function () {
@@ -70,12 +70,12 @@ describe('Factory: CustomSearchServiceQuery', function () {
   it('should allow the addition of one time period condition', function () {
     customSearchServiceQuery.addTimePeriod();
 
-    expect(customSearchServiceQuery.time_period).toEqual(CUSTOM_SEARCH_TIME_PERIODS[0].value);
+    expect(customSearchServiceQuery.time).toEqual(CUSTOM_SEARCH_TIME_PERIODS[0].value);
   });
 
   it('should allow the removal of the time period condition', function () {
     customSearchServiceQuery.removeTimePeriod();
 
-    expect(customSearchServiceQuery.time_period).toEqual(null);
+    expect(customSearchServiceQuery.time).toEqual(null);
   });
 });

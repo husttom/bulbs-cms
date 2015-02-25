@@ -6,10 +6,20 @@ angular.module('customSearch.service.condition.factory', [
   .factory('CustomSearchServiceCondition', function (_, CUSTOM_SEARCH_CONDITION_FIELDS,
       CUSTOM_SEARCH_CONDITION_TYPES) {
 
-    var CustomSearchServiceCondition = function () {
-      this.field = CUSTOM_SEARCH_CONDITION_FIELDS[0].endpoint;
-      this.type = CUSTOM_SEARCH_CONDITION_TYPES[0].value;
+    var CustomSearchServiceCondition = function (params) {
+      var opts = params || {};
+
+      this.field = opts.field || CUSTOM_SEARCH_CONDITION_FIELDS[0].endpoint;
+      this.type = opts.type || CUSTOM_SEARCH_CONDITION_TYPES[0].value;
+
       this.values = [];
+      if (opts.values) {
+        // values provided, build them out
+        var self = this;
+        _.forEach(opts.values, function (value) {
+          self.addValue(value);
+        });
+      }
     };
 
     CustomSearchServiceCondition.prototype.asQueryData = function () {
