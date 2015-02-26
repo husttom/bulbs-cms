@@ -39,7 +39,6 @@ angular.module('bulbsCmsApp', [
   // shared
   'contentServices',
   // components
-  'editorsPick',
   'filterWidget',
   'promotedContent',
   'statusFilter'
