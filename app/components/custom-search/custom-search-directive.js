@@ -17,6 +17,10 @@ angular.module('customSearch.directive', [
         $scope.addedFilterOn = false;
         $scope.removedFilterOn = false;
 
+        var updateQueryData = function () {
+          $scope.searchQueryData = $scope.customSearchService.asQueryData();
+        };
+
         $scope.resetFilters = function () {
           $scope.customSearchService.page = 1;
           $scope.customSearchService.query = '';
@@ -25,16 +29,24 @@ angular.module('customSearch.directive', [
         };
 
         $scope.$conditionalContentRetrieve = function () {
+          var promise;
           if ($scope.addedFilterOn) {
             // included filter is on, use retrieval by included
-            $scope.customSearchService.$filterContentByIncluded();
+            promise = $scope.customSearchService.$filterContentByIncluded();
           } else if ($scope.removedFilterOn) {
             // excluded filter is on, use retrieval by excluded
-            $scope.customSearchService.$filterContentByExcluded();
+            promise = $scope.customSearchService.$filterContentByExcluded();
           } else {
             // no query entered, any request should go to page one
-            $scope.customSearchService.$retrieveContent();
+            promise = $scope.customSearchService.$retrieveContent();
           }
+
+          return promise.then(updateQueryData);
+        };
+
+        $scope.$contentRetrieve = function () {
+          return $scope.customSearchService.$retrieveContent()
+            .then(updateQueryData);
         };
       },
       restrict: 'E',

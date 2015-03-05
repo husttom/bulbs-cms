@@ -16,11 +16,11 @@
       remove="
         customSearchService.removeQuery($index);
         resetFilters();
-        customSearchService.$retrieveContent()"
+        $contentRetrieve()"
       model="group"
       on-update="
         resetFilters();
-        customSearchService.$retrieveContent()">
+        $contentRetrieve()">
   </custom-search-query>
 
   <button
@@ -35,7 +35,7 @@
     on-select="
       resetFilters();
       customSearchService.include(id);
-      customSearchService.$retrieveContent()">
+      $contentRetrieve()">
 </custom-search-simple-content-search>
 
 <hr>

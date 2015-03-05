@@ -43,7 +43,7 @@ describe('Factory: CustomSearchServiceQuery', function () {
 
     customSearchServiceQuery.$updateResultCount();
 
-    $httpBackend.expectPOST('/cms/api/v1/custom-search-content/count/').respond(200, {count: count});
+    $httpBackend.expectPOST('/cms/api/v1/custom-search-content/group_count/').respond(200, {count: count});
     $httpBackend.flush();
 
     expect(customSearchServiceQuery.result_count).toBe(count);
