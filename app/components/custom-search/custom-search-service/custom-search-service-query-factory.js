@@ -23,7 +23,7 @@ angular.module('customSearch.service.query.factory', [
         });
       }
 
-      this._countEndpoint = ContentFactory.service('custom-search-content/count/');
+      this._countEndpoint = ContentFactory.service('custom-search-content/group_count/');
     };
 
     CustomSearchServiceQuery.prototype.asQueryData = function () {
