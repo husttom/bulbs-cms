@@ -10,9 +10,12 @@ angular.module('customSearch.directive', [
   .directive('customSearch', function (routes) {
     return {
       controller: function ($scope, CustomSearchService) {
-        $scope.customSearchService = new CustomSearchService($scope.searchQueryData);
 
-        $scope.customSearchService.$retrieveContent();
+        $scope.searchQueryData = {};
+        $scope.$watch('searchQueryData', function () {
+          $scope.customSearchService = new CustomSearchService($scope.searchQueryData);
+          $scope.customSearchService.$retrieveContent();
+        });
 
         $scope.addedFilterOn = false;
         $scope.removedFilterOn = false;
